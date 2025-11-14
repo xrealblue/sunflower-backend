@@ -23,6 +23,7 @@
     "lint": "eslint src/**/*.ts"
   },
   "dependencies": {
+    "@prisma/client": "^6.19.0",
     "@socket.io/redis-streams-adapter": "^0.2.2",
     "@types/cookie-parser": "^1.4.9",
     "axios": "^1.9.0",
@@ -47,6 +48,7 @@
     "node-fetch": "^3.3.2",
     "passport": "^0.7.0",
     "passport-auth0": "^1.4.5",
+    "prisma": "^6.19.0",
     "redis": "^5.5.6",
     "socket.io": "^4.8.1",
     "speedcast-api": "^1.0.0"
