@@ -20,7 +20,12 @@
     "dev": "bun run --watch src/server.ts",
     "build": "tsc",
     "start": "bun run dist/server.js",
-    "lint": "eslint src/**/*.ts"
+    "lint": "eslint src/**/*.ts",
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "db:migrate": "prisma migrate dev",
+    "db:studio": "prisma studio",
+    "db:seed": "bun run prisma/seed.ts"
   },
   "dependencies": {
     "@prisma/client": "^6.19.0",
@@ -32,7 +37,7 @@
     "compression": "^1.8.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
-    "dotenv": "^16.5.0",
+    "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "express-openid-connect": "^2.19.2",
     "express-rate-limit": "^7.5.0",
@@ -45,6 +50,7 @@
     "node-fetch": "^3.3.2",
     "passport": "^0.7.0",
     "passport-auth0": "^1.4.5",
+    "pg": "^8.16.3",
     "prisma": "^6.19.0"
   }
 }
