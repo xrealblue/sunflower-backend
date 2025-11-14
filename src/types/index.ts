@@ -6,11 +6,12 @@ export interface IUser {
 }
 
 export interface INotification {
-
+    context: string;
+    album: IAlbum["externalUrl"];
 }
 
 export interface IArtist {
-
+    albums: IAlbum[];
 }
 
 export interface IAlbum {
