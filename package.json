@@ -1,5 +1,5 @@
 {
-  "name": "Gdisk",
+  "name": "sunflower",
   "module": "index.ts",
   "type": "module",
   "devDependencies": {
@@ -41,16 +41,10 @@
     "express-validator": "^7.2.1",
     "helmet": "^8.1.0",
     "http": "^0.0.1-security",
-    "ioredis": "^5.6.1",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.15.1",
-    "morgan": "^1.10.0",
     "node-fetch": "^3.3.2",
     "passport": "^0.7.0",
     "passport-auth0": "^1.4.5",
-    "prisma": "^6.19.0",
-    "redis": "^5.5.6",
-    "socket.io": "^4.8.1",
-    "speedcast-api": "^1.0.0"
+    "prisma": "^6.19.0"
   }
 }
