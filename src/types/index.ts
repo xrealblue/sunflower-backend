@@ -1,8 +1,14 @@
 export interface IUser {
   username: string;
-  Name: string;
+  displayName: string;
   notifications: INotification[];
   follows: IArtist[];
+   createdAt: {
+        type: Date;
+    };
+    updatedAt: {
+        type: Date;
+    };
 }
 
 export interface INotification {
