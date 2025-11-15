@@ -23,7 +23,7 @@ class EmailService {
     this.defaultFrom = process.env.AUTH_USER || 'noreply@songmatch.com';
     
     // Create transporter with Brevo SMTP
-    this.transporter = nodemailer.createTransporter({
+    this.transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST || 'smtp-relay.brevo.com',
       port: parseInt(process.env.SMTP_PORT || '587'),
       secure: false, // true for 465, false for other ports
