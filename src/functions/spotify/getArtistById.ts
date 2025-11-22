@@ -4,7 +4,6 @@ import { getSpotifyToken } from "./getSpotifyToken";
 export const getArtistById = async (artistId: string) => {
     try {
 
-
         const token = getSpotifyToken()
 
         const url = `https://api.spotify.com/v1/artists/${artistId}`;
