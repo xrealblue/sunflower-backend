@@ -70,3 +70,13 @@ model Album {
   updatedAt   DateTime @updatedAt
 }
 
+model Verification {
+  id         String    @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime?
+  updatedAt  DateTime?
+}
+
+

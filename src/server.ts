@@ -24,7 +24,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.all('/api/auth/*}', toNodeHandler(auth));
+app.all('/api/auth/*', toNodeHandler(auth));
 
 app.use(router);
 
