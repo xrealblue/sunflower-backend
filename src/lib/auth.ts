@@ -13,7 +13,6 @@ export const auth = betterAuth({
     },
      trustedOrigins: [
     "http://localhost:3000",  
-    "http://localhost:4000",  
   ],
     socialProviders: {
         google: {

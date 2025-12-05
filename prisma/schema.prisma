@@ -15,12 +15,19 @@ datasource db {
 }
 
 model User {
-  id            String         @id @default(uuid())
-  username      String         @unique
+  id            String    @id @default(cuid())
+  name          String
+  email         String    @unique
+  emailVerified Boolean   @default(false)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
   notifications Notification[]
-  follows       Artist[]       @relation("UserFollows")
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
+  following     Artist[] @relation("UserFollows")
+  sessions      Session[]
+  accounts      Account[]
+
+  @@map("user")
 }
 
 model Notification {
@@ -71,12 +78,51 @@ model Album {
 }
 
 model Verification {
-  id         String    @id
-  identifier String
-  value      String
+  id         String   @id @default(cuid())
+  identifier String   // Email or user identifier
+  value      String   // Verification token
   expiresAt  DateTime
-  createdAt  DateTime?
-  updatedAt  DateTime?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([identifier, value])
+  @@map("verification")
+}
+model Session {
+  id         String    @id @default(cuid())
+  expiresAt  DateTime
+  token      String    @unique
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  ipAddress  String?
+  userAgent  String?
+  userId     String
+  
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("session")
 }
 
+
+model Account {
+  id                String   @id @default(cuid())
+  accountId         String   // Provider's user ID
+  providerId        String   // Provider name (e.g., "google", "github")
+  userId            String
+  accessToken       String?  @db.Text
+  refreshToken      String?  @db.Text
+  idToken           String?  @db.Text
+  accessTokenExpiresAt DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope             String?
+  password          String?  // For email/password auth
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  // Relations
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([providerId, accountId])
+  @@map("account")
+}
 
