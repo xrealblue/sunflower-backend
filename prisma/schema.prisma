@@ -23,7 +23,7 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   notifications Notification[]
-  following     Artist[] @relation("UserFollows")
+  following     String[]
   sessions      Session[]
   accounts      Account[]
 
