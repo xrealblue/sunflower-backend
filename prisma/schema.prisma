@@ -51,9 +51,6 @@ model Artist {
   externalUrl Json
 
   albums     Album[]
-
-  followers  User[] @relation("UserFollows")
-
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 }

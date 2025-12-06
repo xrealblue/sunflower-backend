@@ -7,21 +7,24 @@ export interface FollowArtistParams {
 
 export const followArtist = async ({ userId, artistId }: FollowArtistParams) => {
   try {
+    const artist = await prisma.artist.findUnique({
+      where: { id: artistId }
+    });
+
+    if (!artist) {
+      throw new Error('Artist not found');
+    }
+
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      select: { 
-        following: {
-          select: { id: true }
-        }
-      }
+      select: { following: true }
     });
 
     if (!user) {
       throw new Error('User not found');
     }
 
-    const isFollowing = user.following.some((artist) => artist.id === artistId);
-    if (isFollowing) {
+    if (user.following.includes(artistId)) {
       throw new Error('Already following this artist');
     }
 
@@ -29,20 +32,13 @@ export const followArtist = async ({ userId, artistId }: FollowArtistParams) => 
       where: { id: userId },
       data: {
         following: {
-          connect: { id: artistId }
+          push: artistId
         }
       },
       select: {
         id: true,
         name: true,
-        following: {
-          select: {
-            id: true,
-            name: true,
-            images: true,
-            genres: true
-          }
-        }
+        following: true
       }
     });
 
@@ -55,3 +51,4 @@ export const followArtist = async ({ userId, artistId }: FollowArtistParams) => 
     throw error;
   }
 };
+
