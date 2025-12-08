@@ -33,7 +33,8 @@ export const searchArtists = async (req: Request, res: Response) => {
       name: artist.name,
       images: artist.images || [],
       popularity: artist.popularity,
-      followers: artist.followers.total
+      followers: artist.followers,
+      genres: artist.genres || [],
     }));
 
     return res.status(200).json({
@@ -44,6 +45,7 @@ export const searchArtists = async (req: Request, res: Response) => {
     console.error("Spotify Search Error:", error.response?.data || error);
     return res.status(500).json({
       success: false,
+      
       message: "Failed to search artists on Spotify"
     });
   }
