@@ -1,30 +1,47 @@
 import prisma from "@/lib/prisma";
 
-export const getFollowedArtists = async (userId: string) => {
+export interface GetFollowedArtistsParams {
+  userId: string;
+}
+
+export const getFollowedArtists = async ({ userId }: GetFollowedArtistsParams) => {
   try {
-    const user = await prisma.user.findUnique({
+    let user = await prisma.user.findUnique({
       where: { id: userId },
       select: { following: true }
     });
 
     if (!user) {
-      throw new Error('User not found');
-    }
-
-    const artists = await prisma.artist.findMany({
-      where: {
-        id: {
-          in: user.following 
+      const newUser = await prisma.user.create({
+        data: {
+          id: userId,
+          name: "User", 
+          email: `${userId}@temp.com`,
+          following: []
+        },
+        select: {
+          following: true
         }
-      },
-    });
+      });
+
+      return {
+        success: true,
+        message: 'User created',
+        data: []
+      };
+    }
 
     return {
       success: true,
-      data: artists
+      message: 'Successfully retrieved followed artists',
+      data: user.following
     };
   } catch (error) {
-    throw error;
+    console.error('Get followed artists error:', error);
+    return {
+      success: false,
+      message: error instanceof Error ? error.message : 'Failed to get followed artists',
+      data: []
+    };
   }
 };
-

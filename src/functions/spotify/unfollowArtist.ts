@@ -7,17 +7,39 @@ export interface FollowArtistParams {
 
 export const unfollowArtist = async ({ userId, artistId }: FollowArtistParams) => {
   try {
-    const user = await prisma.user.findUnique({
+    let user = await prisma.user.findUnique({
       where: { id: userId },
       select: { following: true }
     });
 
     if (!user) {
-      throw new Error('User not found');
+      const newUser = await prisma.user.create({
+        data: {
+          id: userId,
+          name: "User", 
+          email: `${userId}@temp.com`,
+          following: []
+        },
+        select: {
+          id: true,
+          name: true,
+          following: true
+        }
+      });
+
+      return {
+        success: false,
+        message: 'User was not following this artist',
+        data: newUser
+      };
     }
 
     if (!user.following.includes(artistId)) {
-      throw new Error('Not following this artist');
+      return {
+        success: false,
+        message: 'Not following this artist',
+        data: null
+      };
     }
 
     const updatedFollowing = user.following.filter(id => id !== artistId);
@@ -40,6 +62,11 @@ export const unfollowArtist = async ({ userId, artistId }: FollowArtistParams) =
       data: updatedUser
     };
   } catch (error) {
-    throw error;
+    console.error('Unfollow artist error:', error);
+    return {
+      success: false,
+      message: error instanceof Error ? error.message : 'Failed to unfollow artist',
+      data: null
+    };
   }
 };
