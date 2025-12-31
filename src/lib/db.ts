@@ -1,7 +1,10 @@
 import { config } from "../config/config";
 import { prisma } from "./prisma";
 
+const disconnecting = false;
+const maxtries = 5
 async function connectDatabase() {
+  let attempt = 1;
   try {
     await prisma.$connect();
     console.log('✅ Database connected successfully');
@@ -11,12 +14,20 @@ async function connectDatabase() {
     
     return true;
   } catch (error) {
-    console.error('❌ Database connection failed:', error);
+    attempt++;
+    if (maxtries < attempt) {
+      console.error(`❌ Database connection failed. Retrying... (${maxtries} attempts left)`);
+  ;
+      await new Promise(res => setTimeout(res, 2000));
+      return connectDatabase();
+    } else {
+      console.error('❌ Database connection failed after multiple attempts:', error);
+    }
+      await new Promise(res => setTimeout(res, 2000));
     return false;
   }
 }
 
-// Graceful shutdown
 async function disconnectDatabase() {
   try {
     await prisma.$disconnect();
@@ -26,10 +37,8 @@ async function disconnectDatabase() {
   }
 }
 
-// Accept the HTTP server instance
 export async function runServer(server: any) {
   try {
-    // Connect to database first
     const dbConnected = await connectDatabase();
     
     if (!dbConnected) {
