@@ -11,31 +11,32 @@ import { toNodeHandler } from "better-auth/node";
 const app = express();
 const server = http.createServer(app);
 
-// Middleware setup
-
+// Allowed origins (NO trailing slashes)
 const allowed = [
   "http://localhost:3000",
   "https://www.realblue.lol",
-  "https://bluesunflower.vercel.app/",
-  "https://sunflower.realblue.lol/",
+  "https://bluesunflower.vercel.app",
+  "https://sunflower.realblue.lol",
 ];
 
 app.use(
   cors({
     origin: function (origin, cb) {
-      // allow requests with no origin (like server‑to‑server, Postman, etc.)
       if (!origin) return cb(null, true);
       if (allowed.indexOf(origin) === -1) {
         return cb(new Error(`CORS denied for ${origin}`), false);
       }
       cb(null, true);
     },
+    credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   }),
 );
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-
 
 // Debug logging
 app.use((req, res, next) => {
@@ -53,5 +54,4 @@ app.use((req, res) => {
 
 app.use(errorHandler);
 
-// Start server
 runServer(server);
