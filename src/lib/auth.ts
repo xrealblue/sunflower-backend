@@ -25,6 +25,23 @@ export const auth = betterAuth({
     },
     secret: process.env.BETTER_AUTH_SECRET as string,
     baseURL: process.env.BETTER_AUTH_URL as string,
+    
+    // ✅ Add advanced configuration for debugging
+    advanced: {
+        useSecureCookies: true, // Important for production HTTPS
+        crossSubDomainCookies: {
+            enabled: true,
+        },
+    },
+    
+    // ✅ Add logging
+    logger: {
+        level: "debug",
+        disabled: false,
+    },
 });
 
 console.log("✅ Better Auth initialized");
+console.log("📍 Base URL:", process.env.BETTER_AUTH_URL);
+console.log("🔑 Google Client ID:", process.env.GOOGLE_CLIENT_ID ? "✅ Set" : "❌ Missing");
+console.log("🔒 Secret:", process.env.BETTER_AUTH_SECRET ? "✅ Set" : "❌ Missing");
