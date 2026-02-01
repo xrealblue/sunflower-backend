@@ -1,4 +1,4 @@
-import emailService from "@/services/emailService";
+import emailService from "../../services/emailService";
 import type { Request, Response } from "express";
 
 export const verifyEmail = async (req: Request, res: Response) => {

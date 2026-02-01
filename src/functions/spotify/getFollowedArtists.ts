@@ -1,5 +1,5 @@
 // getFollowedArtists.ts
-import { prisma } from "@/lib/prisma";
+import { prisma } from "../../lib/prisma";
 
 export const getFollowedArtists = async ({ userId }: { userId: string }) => {
   try {

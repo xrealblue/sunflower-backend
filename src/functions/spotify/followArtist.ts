@@ -1,5 +1,5 @@
 // followArtist.ts
-import { prisma } from "@/lib/prisma";
+import { prisma } from "../../lib/prisma";
 
 export const followArtist = async ({ userId, artistId }: { userId: string; artistId: string }) => {
   try {
