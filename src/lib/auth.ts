@@ -11,9 +11,12 @@ export const auth = betterAuth({
     emailAndPassword: {
         enabled: true,
     },
-     trustedOrigins: [
-    "http://localhost:3000",
-  ],
+    trustedOrigins: [
+        "http://localhost:3000",
+        "https://www.realblue.lol",
+        "https://bluesunflower.vercel.app",
+        "https://sunflower.realblue.lol",
+    ],
     socialProviders: {
         google: {
             clientId: process.env.GOOGLE_CLIENT_ID as string,
