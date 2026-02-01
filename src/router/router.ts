@@ -2,10 +2,10 @@ import { Router, type Request, type Response } from "express";
 import { getArtistById } from "../functions/spotify/getArtistById";
 import { searchArtists } from "../functions/spotify/searchArtist";
 import { getAlbumById } from "../functions/spotify/getAlbumById";
-import { followArtist } from "@/functions/spotify/followArtist";
-import { unfollowArtist } from "@/functions/spotify/unfollowArtist";
-import { getFollowedArtists } from "@/functions/spotify/getFollowedArtists";
-import { getAllAlbum } from "@/functions/spotify/getAllAlbum";
+import { getAllAlbum } from "../functions/spotify/getAllAlbum";
+import { followArtist } from "../functions/spotify/followArtist";
+import { unfollowArtist } from "../functions/spotify/unfollowArtist";
+import { getFollowedArtists } from "../functions/spotify/getFollowedArtists";
 
 const router = Router();
 
