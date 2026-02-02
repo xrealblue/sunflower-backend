@@ -11,6 +11,8 @@ import { toNodeHandler } from "better-auth/node";
 const app = express();
 const server = http.createServer(app);
 
+app.set('trust proxy', 1);
+
 const allowed = [
   "http://localhost:3000",
   "http://localhost:3001",
@@ -30,8 +32,9 @@ app.use(
       cb(null, true);
     },
     credentials: true,
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Cookie'], 
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    exposedHeaders: ['Set-Cookie'], // ✅ Add this
   }),
 );
 
@@ -39,9 +42,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// Debug logging
+// Debug logging - enhanced
 app.use((req, res, next) => {
   console.log(`📨 ${req.method} ${req.url}`);
+  console.log('🍪 Cookies:', req.cookies);
+  console.log('🔑 Headers:', req.headers.cookie);
   next();
 });
 
