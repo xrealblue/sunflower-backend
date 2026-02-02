@@ -11,12 +11,13 @@ import { toNodeHandler } from "better-auth/node";
 const app = express();
 const server = http.createServer(app);
 
-// Allowed origins (NO trailing slashes)
 const allowed = [
   "http://localhost:3000",
+  "http://localhost:3001",
   "https://www.realblue.lol",
   "https://bluesunflower.vercel.app",
   "https://sunflower.realblue.lol",
+  "https://sunflower-backend-vv4o.onrender.com",
 ];
 
 app.use(
