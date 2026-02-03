@@ -37,22 +37,21 @@ export const auth = betterAuth({
     secret: process.env.BETTER_AUTH_SECRET as string,
     baseURL: process.env.BETTER_AUTH_URL as string,
     
-advanced: {
-    useSecureCookies: isProduction,
-    crossSubDomainCookies: {
-        enabled: false, // ✅ Change this to false
+    advanced: {
+        useSecureCookies: isProduction,
+        defaultCookieAttributes: {
+            sameSite: "lax",
+            secure: isProduction,
+            httpOnly: true, // ✅ Add this
+            path: "/", // ✅ Add this
+            // Don't set domain - let it default
+        },
     },
-    defaultCookieAttributes: {
-        sameSite: isProduction ? "lax" : "lax", // ✅ Change back to "lax"
-        secure: isProduction,
-        domain: undefined, 
-    },
-},
     
     session: {
         cookieCache: {
             enabled: true,
-            maxAge: 5 * 60, // 5 minutes
+            maxAge: 5 * 60,
         },
     },
     

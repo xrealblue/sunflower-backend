@@ -42,17 +42,28 @@ app.use(
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
+app.use(cookieParser()); // ✅ Parse cookies first
 
-// Debug logging - enhanced
+// ✅ NOW log cookies (after they're parsed)
 app.use((req, res, next) => {
   console.log(`📨 ${req.method} ${req.url}`);
   console.log('🍪 Cookies:', req.cookies);
-  console.log('🔑 Headers:', req.headers.cookie);
+  console.log('🔑 Raw Headers:', req.headers.cookie);
   next();
 });
+
 app.use('/api/auth/sign-in/social', (req, res, next) => {
   console.log('🔍 Social Sign-In Request Body:', req.body);
+  next();
+});
+
+// ✅ Add middleware to check what cookies Better Auth is setting
+app.use('/api/auth/*', (req, res, next) => {
+  const originalSend = res.send;
+  res.send = function(data) {
+    console.log('📤 Response Headers:', res.getHeaders()['set-cookie']);
+    return originalSend.call(this, data);
+  };
   next();
 });
 
