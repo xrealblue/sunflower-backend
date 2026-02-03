@@ -42,14 +42,12 @@ export const auth = betterAuth({
         crossSubDomainCookies: {
             enabled: true,
         },
-        // ✅ Add this to handle redirects properly
         defaultCookieAttributes: {
             sameSite: "lax",
             secure: isProduction,
         },
     },
     
-    // ✅ Configure redirect URLs
     session: {
         cookieCache: {
             enabled: true,
