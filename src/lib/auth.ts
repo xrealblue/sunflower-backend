@@ -5,6 +5,9 @@ import { PrismaClient } from "../generated/prisma/client";
 const prisma = new PrismaClient();
 
 const isProduction = process.env.NODE_ENV === "production";
+const frontendURL = isProduction 
+    ? "https://sunflower.realblue.lol" 
+    : "http://localhost:3000";
 
 export const auth = betterAuth({
     database: prismaAdapter(prisma, {
@@ -18,6 +21,8 @@ export const auth = betterAuth({
     trustedOrigins: [
         "http://localhost:3000",
         "http://localhost:3001",
+        "https://www.realblue.lol",
+        "https://bluesunflower.vercel.app",
         "https://sunflower.realblue.lol",
         "https://sunflower-backend-vv4o.onrender.com",
     ],
@@ -26,53 +31,29 @@ export const auth = betterAuth({
         google: {
             clientId: process.env.GOOGLE_CLIENT_ID as string,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-            
-            // ✅ Add callback URL configuration
-            redirectURI: isProduction
-                ? "https://sunflower.realblue.lol/api/auth/callback/google"
-                : "http://localhost:3000/api/auth/callback/google",
         },
     },
     
     secret: process.env.BETTER_AUTH_SECRET as string,
-    baseURL: isProduction 
-        ? "https://sunflower.realblue.lol" 
-        : "http://localhost:3000",
-    
-    // ✅ Add redirect configuration
-    account: {
-        accountLinking: {
-            enabled: true,
-        },
-    },
-    
-    // ✅ Set where to redirect after successful auth
-    callbacks: {
-        async redirect() {
-            // Redirect to this page after successful OAuth
-            return isProduction 
-                ? "https://sunflower.realblue.lol/auth/callback"
-                : "http://localhost:3000/auth/callback";
-        },
-    },
+    baseURL: process.env.BETTER_AUTH_URL as string,
     
     advanced: {
         useSecureCookies: isProduction,
         crossSubDomainCookies: {
-            enabled: false,
+            enabled: true,
         },
+        // ✅ Add this to handle redirects properly
         defaultCookieAttributes: {
             sameSite: "lax",
             secure: isProduction,
-            httpOnly: true,
-            path: "/",
         },
     },
     
+    // ✅ Configure redirect URLs
     session: {
         cookieCache: {
             enabled: true,
-            maxAge: 5 * 60,
+            maxAge: 5 * 60, // 5 minutes
         },
     },
     
@@ -81,3 +62,9 @@ export const auth = betterAuth({
         disabled: false,
     },
 });
+
+console.log("✅ Better Auth initialized");
+console.log("📍 Base URL:", process.env.BETTER_AUTH_URL);
+console.log("🎯 Frontend URL:", frontendURL);
+console.log("🌍 Environment:", process.env.NODE_ENV || "development");
+console.log("🔑 Google Client ID:", process.env.GOOGLE_CLIENT_ID ? "✅ Set" : "❌ Missing");
