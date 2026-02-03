@@ -49,7 +49,16 @@ app.use((req, res, next) => {
   console.log('🔑 Headers:', req.headers.cookie);
   next();
 });
-
+app.use('/api/auth/*', (req, res, next) => {
+  console.log('🔐 Auth Request:', {
+    method: req.method,
+    url: req.url,
+    query: req.query,
+    origin: req.headers.origin,
+    referer: req.headers.referer
+  });
+  next();
+});
 app.all('/api/auth/*', toNodeHandler(auth));
 
 app.use(router);
