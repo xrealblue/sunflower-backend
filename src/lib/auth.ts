@@ -37,14 +37,15 @@ export const auth = betterAuth({
     secret: process.env.BETTER_AUTH_SECRET as string,
     baseURL: process.env.BETTER_AUTH_URL as string,
     
-   advanced: {
+advanced: {
     useSecureCookies: isProduction,
     crossSubDomainCookies: {
-        enabled: true,
+        enabled: false, // ✅ Change this to false
     },
     defaultCookieAttributes: {
-        sameSite: isProduction ? "none" : "lax",
+        sameSite: isProduction ? "lax" : "lax", // ✅ Change back to "lax"
         secure: isProduction,
+        domain: undefined, 
     },
 },
     
