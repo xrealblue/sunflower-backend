@@ -34,7 +34,9 @@ app.use(
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization', 'Cookie'], 
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    exposedHeaders: ['Set-Cookie'], // ✅ Add this
+    exposedHeaders: ['Set-Cookie'],
+    preflightContinue: false,
+    optionsSuccessStatus: 204, 
   }),
 );
 
