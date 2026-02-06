@@ -28,26 +28,22 @@ export const auth = betterAuth({
         google: {
             clientId: process.env.GOOGLE_CLIENT_ID as string,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-            // ✅ ADD THIS - explicitly set the redirect URI
-            redirectURI: isProduction 
-                ? "https://sunflower-backend-vv4o.onrender.com/api/auth/callback/google"
-                : "http://localhost:3001/api/auth/callback/google",
         },
     },
     
     secret: process.env.BETTER_AUTH_SECRET as string,
     
-    // ✅ CRITICAL: baseURL must match where your backend is hosted
     baseURL: isProduction
         ? "https://sunflower-backend-vv4o.onrender.com"
         : "http://localhost:3001",
     
     advanced: {
-        useSecureCookies: isProduction,
-        cookiePrefix: "better-auth", // ✅ Add explicit prefix
+        // ✅ THIS IS THE KEY FIX - disable secure cookies in dev
+        useSecureCookies: isProduction, // false in development!
+        
         defaultCookieAttributes: {
-            sameSite: "lax", // ✅ Critical for OAuth
-            secure: isProduction,
+            sameSite: "lax",
+            secure: isProduction, // ✅ This will be false in dev
             httpOnly: true,
             path: "/",
         },
@@ -56,12 +52,7 @@ export const auth = betterAuth({
     session: {
         cookieCache: {
             enabled: true,
-            maxAge: 5 * 60, // 5 minutes
+            maxAge: 5 * 60,
         },
     },
 });
-
-console.log("✅ Better Auth initialized");
-console.log("📍 Base URL:", isProduction ? "https://sunflower-backend-vv4o.onrender.com" : "http://localhost:3001");
-console.log("🌍 Environment:", process.env.NODE_ENV || "development");
-console.log("🔑 Google Client ID:", process.env.GOOGLE_CLIENT_ID ? "✅ Set" : "❌ Missing");
