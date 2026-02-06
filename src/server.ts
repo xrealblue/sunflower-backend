@@ -14,8 +14,6 @@ const server = http.createServer(app);
 app.set('trust proxy', 1); // ✅ Keep this
 
 const allowed = [
-  "http://localhost:3000",
-  "http://localhost:3001",
   "https://www.realblue.lol",
   "https://bluesunflower.vercel.app",
   "https://sunflower.realblue.lol",

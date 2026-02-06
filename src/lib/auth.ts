@@ -15,12 +15,10 @@ export const auth = betterAuth({
     },
     
     trustedOrigins: [
-        "http://localhost:3000",
-        "http://localhost:3001",
         "https://www.realblue.lol",
         "https://bluesunflower.vercel.app",
         "https://sunflower.realblue.lol",
-        "https://sunserver.realblue.lol", // ✅ Add new backend URL
+        "https://sunserver.realblue.lol", 
     ],
     
     socialProviders: {
@@ -32,10 +30,8 @@ export const auth = betterAuth({
     
     secret: process.env.BETTER_AUTH_SECRET as string,
     
-    // ✅ Update baseURL
-    baseURL: isProduction
-        ? "https://sunserver.realblue.lol"
-        : "http://localhost:3001",
+    baseURL:"https://sunserver.realblue.lol",
+       
     
     advanced: {
         useSecureCookies: isProduction,
@@ -56,7 +52,3 @@ export const auth = betterAuth({
         },
     },
 });
-
-console.log("✅ Better Auth initialized");
-console.log("📍 Base URL:", isProduction ? "https://sunserver.realblue.lol" : "http://localhost:3001");
-console.log("🍪 Cookie Domain:", isProduction ? ".realblue.lol" : "localhost");

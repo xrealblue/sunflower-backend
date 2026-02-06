@@ -48,7 +48,7 @@ export async function runServer(server: any) {
 
     // Start the server
     server.listen(config.port, () => {
-      console.log(`🚀 Server is running on port ${config.port} - http://localhost:${config.port}`);
+      console.log(`🚀 Server is running on ${config.port}`);
     });
 
     // Handle graceful shutdown
