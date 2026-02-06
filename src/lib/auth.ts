@@ -38,12 +38,11 @@ export const auth = betterAuth({
         : "http://localhost:3001",
     
     advanced: {
-        // ✅ THIS IS THE KEY FIX - disable secure cookies in dev
-        useSecureCookies: isProduction, // false in development!
+        useSecureCookies: false, 
         
         defaultCookieAttributes: {
             sameSite: "lax",
-            secure: isProduction, // ✅ This will be false in dev
+            secure: isProduction, 
             httpOnly: true,
             path: "/",
         },
