@@ -3,7 +3,6 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import { PrismaClient } from "../generated/prisma/client";
 
 const prisma = new PrismaClient();
-
 const isProduction = process.env.NODE_ENV === "production";
 
 export const auth = betterAuth({
@@ -21,7 +20,7 @@ export const auth = betterAuth({
         "https://www.realblue.lol",
         "https://bluesunflower.vercel.app",
         "https://sunflower.realblue.lol",
-        "https://sunflower-backend-vv4o.onrender.com",
+        "https://sunserver.realblue.lol", // ✅ Add new backend URL
     ],
     
     socialProviders: {
@@ -33,18 +32,20 @@ export const auth = betterAuth({
     
     secret: process.env.BETTER_AUTH_SECRET as string,
     
+    // ✅ Update baseURL
     baseURL: isProduction
-        ? "https://sunflower-backend-vv4o.onrender.com"
+        ? "https://sunserver.realblue.lol"
         : "http://localhost:3001",
     
     advanced: {
-        useSecureCookies: false, 
-        
+        useSecureCookies: isProduction,
         defaultCookieAttributes: {
             sameSite: "lax",
-            secure: isProduction, 
+            secure: isProduction,
             httpOnly: true,
             path: "/",
+            // ✅ Now both frontend and backend share .realblue.lol domain!
+            domain: isProduction ? ".realblue.lol" : undefined,
         },
     },
     
@@ -55,3 +56,7 @@ export const auth = betterAuth({
         },
     },
 });
+
+console.log("✅ Better Auth initialized");
+console.log("📍 Base URL:", isProduction ? "https://sunserver.realblue.lol" : "http://localhost:3001");
+console.log("🍪 Cookie Domain:", isProduction ? ".realblue.lol" : "localhost");

@@ -19,7 +19,7 @@ const allowed = [
   "https://www.realblue.lol",
   "https://bluesunflower.vercel.app",
   "https://sunflower.realblue.lol",
-  "https://sunflower-backend-vv4o.onrender.com",
+  "https://sunserver.realblue.lol", 
 ];
 
 app.use(
