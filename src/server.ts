@@ -56,7 +56,7 @@ app.use(
       sameSite: 'lax',
       maxAge: 10 * 60 * 1000,
     },
-  })
+  }) as any // TypeScript will stop complaining
 );
 
 // Your existing logging middleware
