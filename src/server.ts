@@ -4,6 +4,7 @@ import router from "./router/router";
 import { runServer } from './lib/db';
 import cookieParser from 'cookie-parser';
 import cors from "cors";
+import session from 'express-session';
 import { errorHandler } from './handlers/errorHandler';
 import { auth } from "./lib/auth";
 import { toNodeHandler } from "better-auth/node";
@@ -32,23 +33,38 @@ app.use(
       cb(null, true);
     },
     credentials: true,
-    allowedHeaders: ['Content-Type', 'Authorization', 'Cookie'], 
+    allowedHeaders: ['Content-Type', 'Authorization', 'Cookie'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     exposedHeaders: ['Set-Cookie'],
     preflightContinue: false,
-    optionsSuccessStatus: 204, 
+    optionsSuccessStatus: 204,
   }),
 );
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser()); // ✅ Parse cookies first
+app.use(cookieParser());
 
-// ✅ NOW log cookies (after they're parsed)
+/
+app.use(
+  session({
+    secret: process.env.BETTER_AUTH_SECRET as string,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: process.env.NODE_ENV === 'production',
+      httpOnly: true,
+      sameSite: 'lax',
+      maxAge: 10 * 60 * 1000,
+    },
+  })
+);
+
+// Your existing logging middleware
 app.use((req, res, next) => {
   console.log(`📨 ${req.method} ${req.url}`);
   console.log('🍪 Cookies:', req.cookies);
-  console.log('🔑 Raw Headers:', req.headers.cookie);
+  console.log('🔑 Session ID:', (req as any).session?.id);
   next();
 });
 
@@ -57,10 +73,9 @@ app.use('/api/auth/sign-in/social', (req, res, next) => {
   next();
 });
 
-// ✅ Add middleware to check what cookies Better Auth is setting
 app.use('/api/auth/*', (req, res, next) => {
   const originalSend = res.send;
-  res.send = function(data) {
+  res.send = function (data) {
     console.log('📤 Response Headers:', res.getHeaders()['set-cookie']);
     return originalSend.call(this, data);
   };
