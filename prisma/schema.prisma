@@ -95,3 +95,13 @@ model Account {
   @@unique([providerId, accountId])
   @@map("account")
 }
+
+model OAuthSession {
+  id        String   @id
+  sid       String   @unique
+  data      String   @db.Text
+  expiresAt DateTime
+
+  @@index([expiresAt])
+  @@map("oauth_session")
+}

@@ -4,7 +4,6 @@ import router from "./router/router";
 import { runServer } from './lib/db';
 import cookieParser from 'cookie-parser';
 import cors from "cors";
-import session from 'express-session';
 import { errorHandler } from './handlers/errorHandler';
 import { auth } from "./lib/auth";
 import { toNodeHandler } from "better-auth/node";
@@ -12,7 +11,7 @@ import { toNodeHandler } from "better-auth/node";
 const app = express();
 const server = http.createServer(app);
 
-app.set('trust proxy', 1);
+app.set('trust proxy', 1); // ✅ Keep this
 
 const allowed = [
   "http://localhost:3000",
@@ -43,41 +42,28 @@ app.use(
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
+app.use(cookieParser()); // ✅ Keep this - BetterAuth needs it
 
-app.use(
-  session({
-    secret: process.env.BETTER_AUTH_SECRET as string,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      secure: process.env.NODE_ENV === 'production',
-      httpOnly: true,
-      sameSite: 'lax',
-      maxAge: 10 * 60 * 1000,
-    },
-  }) as any // TypeScript will stop complaining
-);
+// ❌ REMOVE session middleware completely
 
-// Your existing logging middleware
 app.use((req, res, next) => {
   console.log(`📨 ${req.method} ${req.url}`);
-  console.log('🍪 Cookies:', req.cookies);
-  console.log('🔑 Session ID:', (req as any).session?.id);
-  next();
-});
-
-app.use('/api/auth/sign-in/social', (req, res, next) => {
-  console.log('🔍 Social Sign-In Request Body:', req.body);
+  console.log('🍪 ALL Cookies:', req.cookies); // ✅ Add to see BetterAuth cookies
+  console.log('🍪 Signed Cookies:', req.signedCookies);
   next();
 });
 
 app.use('/api/auth/*', (req, res, next) => {
-  const originalSend = res.send;
-  res.send = function (data) {
-    console.log('📤 Response Headers:', res.getHeaders()['set-cookie']);
-    return originalSend.call(this, data);
+  console.log('🍪 Request Cookies:', req.cookies);
+  
+  const originalSetHeader = res.setHeader;
+  res.setHeader = function(name, value) {
+    if (name.toLowerCase() === 'set-cookie') {
+      console.log('📤 Setting Cookie:', value);
+    }
+    return originalSetHeader.apply(this, arguments as any);
   };
+  
   next();
 });
 

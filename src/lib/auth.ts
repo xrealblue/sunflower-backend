@@ -5,9 +5,6 @@ import { PrismaClient } from "../generated/prisma/client";
 const prisma = new PrismaClient();
 
 const isProduction = process.env.NODE_ENV === "production";
-const frontendURL = isProduction 
-    ? "https://sunflower.realblue.lol" 
-    : "http://localhost:3000";
 
 export const auth = betterAuth({
     database: prismaAdapter(prisma, {
@@ -31,38 +28,40 @@ export const auth = betterAuth({
         google: {
             clientId: process.env.GOOGLE_CLIENT_ID as string,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+            // ✅ ADD THIS - explicitly set the redirect URI
+            redirectURI: isProduction 
+                ? "https://sunflower-backend-vv4o.onrender.com/api/auth/callback/google"
+                : "http://localhost:3001/api/auth/callback/google",
         },
     },
     
     secret: process.env.BETTER_AUTH_SECRET as string,
-    baseURL: process.env.BETTER_AUTH_URL as string,
+    
+    // ✅ CRITICAL: baseURL must match where your backend is hosted
+    baseURL: isProduction
+        ? "https://sunflower-backend-vv4o.onrender.com"
+        : "http://localhost:3001",
     
     advanced: {
         useSecureCookies: isProduction,
+        cookiePrefix: "better-auth", // ✅ Add explicit prefix
         defaultCookieAttributes: {
-            sameSite: "lax",
+            sameSite: "lax", // ✅ Critical for OAuth
             secure: isProduction,
-            httpOnly: true, // ✅ Add this
-            path: "/", // ✅ Add this
-            // Don't set domain - let it default
+            httpOnly: true,
+            path: "/",
         },
     },
     
     session: {
         cookieCache: {
             enabled: true,
-            maxAge: 5 * 60,
+            maxAge: 5 * 60, // 5 minutes
         },
-    },
-    
-    logger: {
-        level: "debug",
-        disabled: false,
     },
 });
 
 console.log("✅ Better Auth initialized");
-console.log("📍 Base URL:", process.env.BETTER_AUTH_URL);
-console.log("🎯 Frontend URL:", frontendURL);
+console.log("📍 Base URL:", isProduction ? "https://sunflower-backend-vv4o.onrender.com" : "http://localhost:3001");
 console.log("🌍 Environment:", process.env.NODE_ENV || "development");
 console.log("🔑 Google Client ID:", process.env.GOOGLE_CLIENT_ID ? "✅ Set" : "❌ Missing");
